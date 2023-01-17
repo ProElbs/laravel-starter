@@ -1,0 +1,35 @@
+version:  '2.1'
+
+services:
+  dbtuto:
+    image: mysql:5.7.30
+    user: 1000:1000
+    env_file: .env
+    volumes:
+      - ./data/mysql:/var/lib/mysql:delegated
+    ports:
+      - "3358:3306"
+
+  nginx:
+    image: nginx:1.19.0-alpine
+    volumes:
+      - './laravel:/var/www/html:delegated'
+      - './var/logs/nginx:/var/log/nginx:cached'
+      - './docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro'
+      - './docker/nginx/ssl:/etc/nginx/ssl:ro'
+    ports:
+      - '80:80'
+    depends_on:
+      - php
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - './laravel:/var/www/html'
+    links:
+      - dbtuto
+    env_file:
+      - .env
+    user: 1000:1000
