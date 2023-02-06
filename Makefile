@@ -16,6 +16,9 @@ start-prod:
 	@docker-compose -f docker-compose.prod.yml up -d
 stop:
 	@docker-compose stop
+restart:
+	@docker-compose stop
+	@docker-compose up -d
 
 ############
 # COMPOSER #
@@ -24,13 +27,9 @@ composer-install:
 	@docker-compose exec -T $(PHP_SERVICE) composer install
 composer-install-prod:
 	@docker-compose exec -T $(PHP_SERVICE) composer install --no-dev --optimize-autoloader
-composer-require:
-	@docker-compose exec -T $(PHP_SERVICE) composer require $(COMMAND_ARGS)
-composer-remove:
-	@docker-compose exec -T $(PHP_SERVICE) composer remove $(COMMAND_ARGS)
 
 ############
-# DATABASE #
+# TODO DATABASE #
 ############
 install-db:
 	@docker-compose exec -T $(PHP_SERVICE) bin/console doctrine:database:drop --force
@@ -42,12 +41,6 @@ migrations-diff:
 
 migrations-migrate:
 	@docker-compose exec -T $(PHP_SERVICE) bin/console doctrine:migrations:migrate
-
-###########
-# SYMFONY #
-###########
-cache-clear:
-	@docker-compose exec -T $(PHP_SERVICE) bin/console cache:clear
 
 ########
 # YARN #
