@@ -1,5 +1,6 @@
 PHP_SERVICE := php
 DB_SERVICE := dbtuto
+PROJECT_NAME := tuto-laravel
 
 ##########
 # DOCKER #
@@ -19,6 +20,8 @@ stop:
 restart:
 	@docker-compose stop
 	@docker-compose up -d
+bash:
+	docker exec -it $(PROJECT_NAME)_$(PHP_SERVICE)_1 bash
 
 ############
 # COMPOSER #
@@ -29,21 +32,19 @@ composer-install-prod:
 	@docker-compose exec -T $(PHP_SERVICE) composer install --no-dev --optimize-autoloader
 
 ############
-# TODO DATABASE #
+# DATABASE #
 ############
 install-db:
-	@docker-compose exec -T $(PHP_SERVICE) bin/console doctrine:database:drop --force
-	@docker-compose exec -T $(PHP_SERVICE) bin/console doctrine:database:create
-	@docker-compose exec -T $(PHP_SERVICE) bin/console doctrine:migrations:migrate
+	@docker-compose exec -T $(PHP_SERVICE) php artisan migrate:fresh
 
-migrations-diff:
-	@docker-compose exec -T $(PHP_SERVICE) bin/console doctrine:migrations:diff
+migrate-status:
+	@docker-compose exec -T $(PHP_SERVICE) php artisan migrate:status
 
-migrations-migrate:
-	@docker-compose exec -T $(PHP_SERVICE) bin/console doctrine:migrations:migrate
+migrate-rollback:
+	@docker-compose exec -T $(PHP_SERVICE) php artisan migrate:rollback
 
 ########
-# YARN #
+# TODO YARN #
 ########
 yarn-install:
 	@docker-compose exec -T $(PHP_SERVICE) yarn install
@@ -55,7 +56,7 @@ encore-watch:
 	@docker-compose exec -T $(PHP_SERVICE) yarn encore dev --watch
 
 #########
-# TOOLS #
+# TODO TOOLS #
 #########
 phpstan:
 	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/phpstan analyse -l 8 src --memory-limit=4G
@@ -67,7 +68,16 @@ php-cs-fixer-fix:
 	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/php-cs-fixer fix -v
 
 ###########
+# ARTISAN #
+###########
+cache-clear:
+	@docker-compose exec -T $(PHP_SERVICE) php artisan route:clear
+	@docker-compose exec -T $(PHP_SERVICE) php artisan view:clear
+	@docker-compose exec -T $(PHP_SERVICE) php artisan cache:clear
+	@docker-compose exec -T $(PHP_SERVICE) php artisan config:clear
+
+###########
 # GLOBALS #
 ###########
-install: build composer-install
+install: build composer-install install-db cache-clear
 
