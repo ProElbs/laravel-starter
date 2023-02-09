@@ -43,29 +43,17 @@ migrate-status:
 migrate-rollback:
 	@docker-compose exec -T $(PHP_SERVICE) php artisan migrate:rollback
 
-########
-# TODO YARN #
-########
-yarn-install:
-	@docker-compose exec -T $(PHP_SERVICE) yarn install
-
-encore-build:
-	@docker-compose exec -T $(PHP_SERVICE) yarn encore dev
-
-encore-watch:
-	@docker-compose exec -T $(PHP_SERVICE) yarn encore dev --watch
-
 #########
-# TODO TOOLS #
+# TOOLS #
 #########
 phpstan:
-	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/phpstan analyse -l 8 src --memory-limit=4G
+	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/phpstan analyse -l 8 app --memory-limit=4G
 
-php-cs-fixer:
-	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/php-cs-fixer fix -v --dry-run
+pint:
+	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/pint
 
-php-cs-fixer-fix:
-	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/php-cs-fixer fix -v
+pint-test:
+	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/pint --test
 
 ###########
 # ARTISAN #
@@ -75,6 +63,12 @@ cache-clear:
 	@docker-compose exec -T $(PHP_SERVICE) php artisan view:clear
 	@docker-compose exec -T $(PHP_SERVICE) php artisan cache:clear
 	@docker-compose exec -T $(PHP_SERVICE) php artisan config:clear
+
+#########
+# TESTS #
+#########
+phpunit:
+	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/phpunit
 
 ###########
 # GLOBALS #
