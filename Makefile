@@ -1,6 +1,6 @@
 PHP_SERVICE := php
-DB_SERVICE := dbtuto
-PROJECT_NAME := tuto-laravel
+DB_SERVICE := dbstarter
+PROJECT_NAME := laravel-starter
 
 ##########
 # DOCKER #

@@ -1,7 +1,7 @@
 version:  '2.1'
 
 services:
-  dbtuto:
+  dbstarter:
     image: mysql:5.7.30
     user: 1000:1000
     env_file: .env
@@ -29,7 +29,7 @@ services:
     volumes:
       - './laravel:/var/www/html'
     links:
-      - dbtuto
+      - dbstarter
     env_file:
       - .env
     user: 1000:1000

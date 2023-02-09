@@ -1,4 +1,4 @@
-# Basic Laravel project
+# Laravel starter project
 
 This is a basic laravel project.  
 With this project you can start a fresh laravel project.
@@ -44,7 +44,8 @@ Copy the given value into your .env
 make install
 ```
 
-You should now have access to the [Homepage](http://localhost/)
+You should now have access to the [Homepage](http://localhost/).  
+Take a look to the Makefile to see all amazing targets available !
 
 ## Running the tests
 
