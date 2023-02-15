@@ -1,4 +1,5 @@
 PHP_SERVICE := php
+NODEJS_SERVICE := nodejs
 DB_SERVICE := dbstarter
 PROJECT_NAME := laravel-starter
 
@@ -70,8 +71,26 @@ cache-clear:
 phpunit:
 	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/phpunit
 
+#######
+# NPM #
+#######
+npm-install:
+	@docker-compose run --rm $(NODEJS_SERVICE) npm install
+
+# Change "tailwindcss..." to what you want to install
+# or directly run : docker-compose run --rm nodejs XXXX
+npm-add:
+	@docker-compose run --rm $(NODEJS_SERVICE) npm install -D tailwindcss postcss autoprefixer
+
+# Checkout the package.json vite target dev has been changed from "vite" to "vite build -watch"
+npm-run:
+	@docker-compose run --rm $(NODEJS_SERVICE) npm run dev
+
+npm-build:
+	@docker-compose run --rm $(NODEJS_SERVICE) npm run build
+
 ###########
 # GLOBALS #
 ###########
-install: build composer-install install-db cache-clear
+install: build composer-install npm-install npm-build install-db cache-clear
 
