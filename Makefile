@@ -48,7 +48,7 @@ migrate-rollback:
 # TOOLS #
 #########
 phpstan:
-	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/phpstan analyse -l 8 app --memory-limit=4G
+	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/phpstan analyse --memory-limit=4G
 
 pint:
 	@docker-compose exec -T $(PHP_SERVICE) vendor/bin/pint
@@ -82,8 +82,8 @@ npm-install:
 npm-add:
 	@docker-compose run --rm $(NODEJS_SERVICE) npm install -D tailwindcss postcss autoprefixer
 
-# Checkout the package.json vite target dev has been changed from "vite" to "vite build -watch"
-npm-run:
+# Checkout the package.json vite target dev has been changed from "vite" to "vite build --watch"
+npm-dev:
 	@docker-compose run --rm $(NODEJS_SERVICE) npm run dev
 
 npm-build:
